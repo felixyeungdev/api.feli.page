@@ -16,7 +16,9 @@ class LookupAddressLatLon {
         }
         try {
             const res = await fetch(
-                `https://www.als.ogcio.gov.hk/lookup?q=${address}&n=1`,
+                `https://www.als.ogcio.gov.hk/lookup?q=${encodeURIComponent(
+                    address
+                )}&n=1`,
                 {
                     headers: { Accept: "application/json" },
                 }

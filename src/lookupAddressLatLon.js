@@ -1,17 +1,32 @@
 const fetch = require("node-fetch");
-const { FeliDatabase } = require("./database");
+const { LatLonDatabase: FeliDatabase } = require("./database");
 
 class LookupAddressLatLon {
-    static async getLatLon(address) {
-        const cachedLatLon = FeliDatabase.getKeyValue(
-            "lookupAddressLatLon.json",
-            address
-        );
-        if (cachedLatLon) {
+    static async getLatLonBulk(addresses) {}
+
+    static async getAddressesLatLon(addresses) {
+        let allLatLon = await FeliDatabase.getAllLatLon();
+        allLatLon = allLatLon.map((old) => {
             return {
-                address,
-                lat: cachedLatLon[0],
-                lon: cachedLatLon[1],
+                address: old["address"],
+                lat: old["lat"],
+                lon: old["lon"],
+            };
+        });
+        allLatLon = allLatLon.filter((latLon) =>
+            addresses.includes(latLon["address"])
+        );
+        return allLatLon;
+    }
+
+    static async getLatLon(address) {
+        const cachedLatLon = await FeliDatabase.getAddressLatLon(address);
+        if (cachedLatLon) {
+            console.log(cachedLatLon);
+            return {
+                address: cachedLatLon["address"],
+                lat: cachedLatLon["lat"],
+                lon: cachedLatLon["lon"],
             };
         }
         try {
@@ -33,10 +48,7 @@ class LookupAddressLatLon {
             const lon = parseFloat(geoInfo["Longitude"]);
 
             if (lat && lon) {
-                FeliDatabase.setKeyValue("lookupAddressLatLon.json", address, [
-                    lat,
-                    lon,
-                ]);
+                await FeliDatabase.setAddressLatLon(address, lat, lon);
             }
 
             return {
@@ -45,12 +57,13 @@ class LookupAddressLatLon {
                 lon,
             };
         } catch (error) {
+            console.log(error);
             return null;
         }
     }
 
     static getLatLonFromLocalDatabase(address) {
-        FeliDatabase.getKeyValue("lookupAddressLatLon.json", address);
+        FeliDatabase.getAddressLatLon(address);
     }
 }
 

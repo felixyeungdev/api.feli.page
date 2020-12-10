@@ -19,7 +19,13 @@ app.get("/v1/lookupAddressLatLon", async (req, res) => {
     });
 });
 app.get("/v1/lookupAddressesLatLon", async (req, res) => {
-    const addresses = req.body;
+    var addresses = decodeURIComponent(req.query.addresses) || "[]";
+    try {
+        addresses = JSON.parse(addresses);
+    } catch (error) {
+        addresses = [];
+    }
+    console.log(addresses);
     if (!addresses || addresses.length <= 0) {
         res.send({
             status: 400,

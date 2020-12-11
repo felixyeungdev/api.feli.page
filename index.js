@@ -9,17 +9,25 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/v1/lookupAddressLatLon", async (req, res) => {
-    const address = decodeURIComponent(req.query.address);
-    const data = await LookupAddressLatLon.getLatLon(address);
-    res.send({
-        status: 200,
-        data: {
-            ...data,
-        },
-    });
+    try {
+        const address = decodeURIComponent(req.query.address);
+        const data = await LookupAddressLatLon.getLatLon(address);
+        res.send({
+            status: 200,
+            data: {
+                ...data,
+            },
+        });
+    } catch (error) {
+        res.send({
+            status: 400,
+            message: "invalid_address",
+        });
+    }
 });
 app.post("/v1/lookupAddressesLatLon", async (req, res) => {
     const addresses = req.body;
+
     if (!addresses || addresses.length <= 0) {
         res.send({
             status: 400,

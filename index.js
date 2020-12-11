@@ -2,9 +2,11 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const port = 8010;
+const morgan = require("morgan");
 
 const { LookupAddressLatLon } = require("./src/lookupAddressLatLon");
 
+app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 

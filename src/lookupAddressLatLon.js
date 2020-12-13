@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 const { LatLonDatabase: FeliDatabase } = require("./database");
 
 class LookupAddressLatLon {
-    static async getLatLonBulk(addresses) {
+    static getLatLonBulk(addresses) {
         let promises = [];
         for (var address of addresses) {
             promises.push(this.getLatLon(address));

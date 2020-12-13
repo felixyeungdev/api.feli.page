@@ -35,7 +35,7 @@ class LookupAddressLatLon {
     }
 
     static async getLatLon(address) {
-        console.log("Getting " + address);
+        // console.log("Getting " + address);
         const cachedLatLon = await FeliDatabase.getAddressLatLon(address);
         if (cachedLatLon) {
             return {

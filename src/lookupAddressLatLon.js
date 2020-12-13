@@ -7,7 +7,7 @@ class LookupAddressLatLon {
         for (var address of addresses) {
             promises.push(this.getLatLon(address));
         }
-        Promise.all(promises);
+        return await Promise.all(promises);
     }
 
     static async getAddressesLatLon(addresses) {

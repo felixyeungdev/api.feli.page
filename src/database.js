@@ -8,6 +8,10 @@ class LatLonDatabase {
         return await latLonCollection.find({});
     }
 
+    static async deleteAll() {
+        await latLonCollection.remove({});
+    }
+
     static async setAddressLatLon(address, lat, lon) {
         const existing = await latLonCollection.find({ address });
         if (existing && existing.length >= 1) return;

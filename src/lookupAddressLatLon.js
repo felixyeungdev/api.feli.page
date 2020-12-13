@@ -1,13 +1,33 @@
 const fetch = require("node-fetch");
 const { LatLonDatabase: FeliDatabase } = require("./database");
+const sleep = require("./sleep");
+
+const bulkAddressLookupStack = [];
+const bulkAddressLookupMax = 5;
+var bulkAddressLookupSeed;
 
 class LookupAddressLatLon {
-    static async getLatLonBulk(addresses) {
-        let promises = [];
+    static async getLatLonBulk(addresses = []) {
+        const sessionSeed = `${Math.random()}`;
+        bulkAddressLookupSeed = sessionSeed;
         for (var address of addresses) {
-            promises.push(this.getLatLon(address));
+            if (!bulkAddressLookupStack.includes(address))
+                bulkAddressLookupStack.push(address);
         }
-        return await Promise.all(promises);
+        for (let i = 0; i < addresses.length; i += bulkAddressLookupMax) {
+            if (sessionSeed != bulkAddressLookupSeed) break;
+            for (let j = i; j < i + bulkAddressLookupMax; j++) {
+                const promises = [];
+                if (j < addresses.length) {
+                    promises.push(this.getLatLon(addresses[j]));
+                    // console.log(
+                    //     `Seed ${sessionSeed} == ${bulkAddressLookupSeed} ${addresses[j]}`
+                    // );
+                }
+                await Promise.all(promises);
+            }
+            // console.log(`Loaded ${bulkAddressLookupMax}`);
+        }
     }
 
     static async getAddressesLatLon(addresses) {

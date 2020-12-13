@@ -2,7 +2,13 @@ const fetch = require("node-fetch");
 const { LatLonDatabase: FeliDatabase } = require("./database");
 
 class LookupAddressLatLon {
-    static async getLatLonBulk(addresses) {}
+    static async getLatLonBulk(addresses) {
+        let promises = [];
+        for (var address of addresses) {
+            promises.push(this.getLatLon(address));
+        }
+        Promise.all(promises);
+    }
 
     static async getAddressesLatLon(addresses) {
         let allLatLon = await FeliDatabase.getAllLatLon();
@@ -13,13 +19,23 @@ class LookupAddressLatLon {
                 lon: old["lon"],
             };
         });
-        allLatLon = allLatLon.filter((latLon) =>
-            addresses.includes(latLon["address"])
+        let oldAddresses = [];
+        allLatLon = allLatLon.filter((latLon) => {
+            oldAddresses.push(latLon["address"]);
+            return addresses.includes(latLon["address"]);
+        });
+
+        let noResults = addresses.filter(
+            (address) => !oldAddresses.includes(address)
         );
+
+        this.getLatLonBulk(noResults);
+
         return allLatLon;
     }
 
     static async getLatLon(address) {
+        console.log("Getting " + address);
         const cachedLatLon = await FeliDatabase.getAddressLatLon(address);
         if (cachedLatLon) {
             return {

@@ -13,7 +13,7 @@ app.use(express.json());
 app.get("/v1/lookupAddressLatLon", async (req, res) => {
     try {
         const address = decodeURIComponent(req.query.address);
-        console.log(address);
+        // console.log(address);
         const data = await LookupAddressLatLon.getLatLon(address);
         res.send({
             status: 200,

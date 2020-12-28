@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -5,6 +6,7 @@ const port = 8010;
 const morgan = require("morgan");
 
 const { LookupAddressLatLon } = require("./src/lookupAddressLatLon");
+const { wordsAPIRouter } = require("./src/wordsAPI");
 
 app.use(morgan("dev"));
 app.use(cors());
@@ -44,6 +46,8 @@ app.post("/v1/lookupAddressesLatLon", async (req, res) => {
         data: data,
     });
 });
+
+app.use("/v1/words", wordsAPIRouter);
 
 app.use((req, res) => {
     const code = 404;

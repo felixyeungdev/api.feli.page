@@ -14,6 +14,7 @@ class WordsCache {
                 definitionsCollection.insert({
                     word,
                     content,
+                    createdAt: Date.now(),
                 });
             }
     }

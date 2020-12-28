@@ -71,15 +71,15 @@ class WordsAPI {
     }
 }
 
-router.get("/random", async (req, res) => {
-    var result;
-    try {
-        result = await WordsAPI.getRandomWord();
-        res.send(result);
-    } catch (error) {
-        res.status(400).send({});
-    }
-});
+// router.get("/random", async (req, res) => {
+//     var result;
+//     try {
+//         result = await WordsAPI.getRandomWord();
+//         res.send(result);
+//     } catch (error) {
+//         res.status(400).send({});
+//     }
+// });
 
 router.get("/define", async (req, res) => {
     var word = req.query.word;

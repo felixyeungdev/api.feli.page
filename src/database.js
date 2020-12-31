@@ -15,7 +15,12 @@ class LatLonDatabase {
     static async setAddressLatLon(address, lat, lon) {
         const existing = await latLonCollection.find({ address });
         if (existing && existing.length >= 1) return;
-        await latLonCollection.insert({ address, lat, lon });
+        await latLonCollection.insert({
+            address,
+            lat,
+            lon,
+            createdAt: new Date(),
+        });
     }
 
     static async getAddressLatLon(address) {

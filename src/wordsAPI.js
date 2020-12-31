@@ -9,7 +9,7 @@ const definitionsCollection = wordsDb.get("definitions");
 
 class WordsCache {
     static async saveWord(word, content) {
-        if (word != "" && content)
+        if (content)
             if (!(await this.getWord(word))) {
                 definitionsCollection.insert({
                     word,

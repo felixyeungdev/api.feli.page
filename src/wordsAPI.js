@@ -82,7 +82,8 @@ class WordsAPI {
 // });
 
 router.get("/define", async (req, res) => {
-    var word = req.query.word;
+    var word = req.query.word || "";
+    word = word.toLowerCase();
     var result;
     try {
         result = await WordsAPI.getWord(word);
